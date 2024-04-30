@@ -30,10 +30,15 @@ Functions were tested with python=3.9
 
 # Contributors
 Vicente Burchard-Levine vburchard@ica.csic.es
+
 Hector Nieto 
+
 Tinebeb Yohannes
+
 Elias Cherenet Weldemariam
+
 Getachew Mehabie Mulualem
+
 Ana Andreu
 
 # License  
