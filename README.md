@@ -10,7 +10,7 @@ The CDI incorporates **three main components** that impact drought severity: 1) 
 
 A jupyter notebook is provided to explain how each of the drought indicators are processed and eventually merged to produce CDI
 
-This repository was developed within the framework of the EO-DBE project funded by the [EO-Africa R&D Reseach facilty](https://www.eoafrica-rd.org/) and the European Space Agency (ESA).
+This repository was developed within the framework of the EO-DBE project funded by the [EO-Africa R&D Reseach facility](https://www.eoafrica-rd.org/) and the European Space Agency (ESA).
 
 # Instalation 
 
