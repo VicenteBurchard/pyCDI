@@ -2,9 +2,7 @@
 
 Python implementation of the producing the composite drought indicator (CDI) based on openly available STAC imagery
 
-The CDI incorporates three main components that impact drought severity: 1) precipitation deficit, 2) excess temperature and 3) vegetation response, incorporating within the CDI three drought indices:
-
-The CDI incorporates **three main components** that impact drought severity: 1) precipitation deficit, 2) excess temperature and 3) vegetation response, incorporating within the CDI three drought indices:
+The CDI incorporates **three main components** that impact drought severity: 1) precipitation deficit, 2) excess temperature and 3) vegetation response, using the following indices:
 
 - Precipiation Drought Index (PDI)
 - Temperature Drought Index (TDI)
