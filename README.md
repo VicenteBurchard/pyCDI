@@ -24,6 +24,7 @@ The following libraries will be needed to properly use the Jupyter Notebook:
 - rioxarray
 - cubo[ee] # this install cubo and also all GEE dependencies
 - leafmap
+- localtileserver
 - notebook 
 
 Functions were tested with python=3.9
