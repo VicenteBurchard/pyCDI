@@ -1,6 +1,6 @@
 # pyCDI 
 
-Python implementation of the producing the composite drought indicator (CDI) based on openly available STAC imagery
+Python implementation to produce the composite drought indicator (CDI) based on openly available STAC imagery
 
 The CDI incorporates **three main components** that impact drought severity: 1) precipitation deficit, 2) excess temperature and 3) vegetation response, using the following indices:
 
