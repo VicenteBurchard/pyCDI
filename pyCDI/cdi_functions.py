@@ -5,9 +5,9 @@ import numpy as np
 import xarray as xr
 import geopandas as gpd
 from rasterio.mask import mask as riomask
+import matplotlib.pyplot as plt
 
-
-def compute_ltm(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = False):
+def compute_ltm(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = False, gee = False):
     '''
     Computes long-term-mean (LTM) for each month over the entire
     available time period. Also computes the LTM of run lengths of
@@ -51,11 +51,16 @@ def compute_ltm(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = Fa
         mean_data = ds_ip.mean(dim='time', keep_attrs=True)
         # convert to units
         mean_ar = mean_data.values * unit_scaler
+
+        # seems that ERA-5 GEE datasets are flipped
+        if gee:
+            mean_ar = np.flip(mean_ar, axis=0)
+
         ltm_dict[month] = mean_ar
         # save to file
         output_mean = outfolder/'mean'
         if not output_mean.exists():
-            output_mean.mkdir()
+            output_mean.mkdir(parents=True)
 
         output_file = output_mean / f'Mean_LTM_{month}.tif'
         print(f'\tsaving result to {str(output_file)}')
@@ -98,14 +103,14 @@ def compute_ltm(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = Fa
         # save to file
         output_rl = outfolder / 'RL'
         if not output_rl.exists():
-            output_rl.mkdir()
+            output_rl.mkdir(parents=True)
         output_file = output_rl / f'RL_LTM_{month}.tif'
         print(f'\tsaving result to {str(output_file)}\n')
         gu.save_image(rl_mean, gt, proj, str(output_file))
 
     return ltm_dict, RL_ltm_dict
 
-def compute_ip(da, time_steps, ltm_dict, gt, proj, outfolder, unit_scaler=1, deficit = False):
+def compute_ip(da, time_steps, ltm_dict, gt, proj, outfolder, unit_scaler=1, gee = False):
     '''
     Computes the actual mean and run length of excess/deficit
     against long term mean (LTM) for the interest period (IP)
@@ -116,8 +121,7 @@ def compute_ip(da, time_steps, ltm_dict, gt, proj, outfolder, unit_scaler=1, def
         time_steps: array with datetime objects of LTM period
         ltm_dict: dictionary with stored LTM monthly values
         unit_scaler: conversion factor if needed to convert to appropriate units
-        deficit: True if RL refers to a deficit over LTM averages (i.e. Precip).
-                 False if RL refers to an excess over LTM averages (i.e. Temp).
+
 
     Returns:
 
@@ -165,12 +169,17 @@ def compute_ip(da, time_steps, ltm_dict, gt, proj, outfolder, unit_scaler=1, def
 
             # convert to units
             mean_ar = mean_data.values * unit_scaler
+
+            # seems that ERA-5 GEE datasets are flipped over x axis (vertically)
+            if gee:
+                mean_ar = np.flip(mean_ar, axis=0)
+
             ip_dict[year_month_dt] = mean_ar
 
             # save to file
             output_mean = outfolder / 'mean'
             if not output_mean.exists():
-                output_mean.mkdir()
+                output_mean.mkdir(parents=True)
 
             output_file = output_mean / f'Mean_IP_{year}_{month}.tif'
             print(f'\tsaving result to {str(output_file)}')
@@ -202,7 +211,7 @@ def compute_ip(da, time_steps, ltm_dict, gt, proj, outfolder, unit_scaler=1, def
             # save to file
             output_rl = outfolder / 'RL'
             if not output_rl.exists():
-                output_rl.mkdir()
+                output_rl.mkdir(parents=True)
             output_file = output_rl / f'RL_IP_{year}_{month}.tif'
             print(f'\tsaving result to {str(output_file)}\n')
             gu.save_image(rl_month, gt, proj, str(output_file))
@@ -252,7 +261,7 @@ def calc_pdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, gt, proj, outfolder, RL
             #save to file
             output_pdi = outfolder / 'PDI'
             if not output_pdi.exists():
-                output_pdi.mkdir()
+                output_pdi.mkdir(parents=True)
             output_file = output_pdi / f'PDI_IP_{year}_{month}.tif'
 
             print(f'\tsaving PDI result for {year}-{month} to {str(output_file)}\n')
@@ -304,7 +313,7 @@ def calc_tdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, Ta_max, gt, proj, outfo
             # save to file
             output_pdi = outfolder / 'TDI'
             if not output_pdi.exists():
-                output_pdi.mkdir()
+                output_pdi.mkdir(parents=True)
             output_file = output_pdi / f'TDI_IP_{year}_{month}.tif'
 
             print(f'\tsaving TDI result for {year}-{month} to {str(output_file)}\n')
@@ -355,7 +364,7 @@ def calc_vdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, ndvi_min, gt, proj, out
             # save to file
             output_pdi = outfolder / 'VDI'
             if not output_pdi.exists():
-                output_pdi.mkdir()
+                output_pdi.mkdir(parents=True)
             output_file = output_pdi / f'VDI_IP_{year}_{month}.tif'
 
             print(f'\tsaving VDI result for {year}-{month} to {str(output_file)}\n')
@@ -428,7 +437,7 @@ def compute_ndvi_monthly(da, start_date, end_date, gt, proj, outfolder):
             # save to file
             output_ndvi = outfolder / 'monthly_rasters'
             if not output_ndvi.exists():
-                output_ndvi.mkdir()
+                output_ndvi.mkdir(parents=True)
             output_file = output_ndvi / f'ndvi_monthly_mean_{year}_{month}.tif'
 
             print(f'\tsaving ndvi monthly mean for {year}-{month} to {str(output_file)}\n')
@@ -473,7 +482,7 @@ def resample_indices(outfolder, roi_shapefile, template_file, indices=['PDI', 'T
         img_list = list(index_folder.glob('*.tif'))
         roi_folder = index_folder / 'ROI'
         if not roi_folder.exists():
-            roi_folder.mkdir()
+            roi_folder.mkdir(parents=True)
 
         for img in img_list:
             filename = img.name
@@ -572,7 +581,7 @@ def calc_cdi(pdi_ds, tdi_ds, vdi_ds, gt, proj, outfolder):
         # save to file
         output_dir = outfolder / 'CDI'
         if not output_dir.exists():
-            output_dir.mkdir()
+            output_dir.mkdir(parents=True)
         output_file = output_dir / f'CDI_IP_{year}_{month}.tif'
 
         print(f'\tsaving final CDI image for {year}-{month} to {str(output_file)}\n')
