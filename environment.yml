@@ -1,14 +1,11 @@
 name: pycdi
 channels:
     - conda-forge
-    - plotly
 dependencies:
-    - jupyter
-    - notebook
+    - python=3.9
     - jupyterlab
-    - jupyter-book
     - ipywidgets
-    - nodejs>=20,<21
+    - nodejs=18
     - mystmd
     - jupyterlab-myst
     - libwebp
