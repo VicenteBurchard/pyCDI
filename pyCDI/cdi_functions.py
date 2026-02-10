@@ -71,7 +71,7 @@ def compute_ltm(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = Fa
         # initialize tempoeary empty list
         rl_ip = []
         for year in np.unique(years):
-            print(f'\tProcessing deficit run length for year {year}')
+            #print(f'\tProcessing deficit run length for year {year}')
             rl_month = np.zeros_like(mean_ar)
             for i in months_ip:
                 # get month in question
@@ -109,7 +109,7 @@ def compute_ltm(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = Fa
         if not output_rl.exists():
             output_rl.mkdir(parents=True)
         output_file = output_rl / f'RL_LTM_{month}.tif'
-        print(f'\tsaving result to {str(output_file)}\n')
+        #print(f'\tsaving result to {str(output_file)}\n')
         gu.save_image(rl_mean, gt, proj, str(output_file))
 
     return ltm_dict, RL_ltm_dict
@@ -266,7 +266,7 @@ def compute_ip(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = Fal
     for year in np.unique(years):
         print(f'Processing IP periods for year {year}')
         for month in np.unique(months):
-            print(f'\tmonth {month}')
+            #print(f'\tmonth {month}')
             year_month_dt = pd.to_datetime(f'{year}-{month}', format='%Y-%m')
             ts_mask = np.logical_and(months == month, years == year)
             time_step = time_steps[ts_mask][0]
@@ -309,7 +309,7 @@ def compute_ip(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = Fal
                 output_mean.mkdir(parents=True)
 
             output_file = output_mean / f'Mean_IP_{year}_{month}.tif'
-            print(f'\tsaving result to {str(output_file)}')
+            #print(f'\tsaving result to {str(output_file)}')
             gu.save_image(mean_ar, gt, proj, str(output_file))
 
             # now calculate RL
@@ -345,7 +345,7 @@ def compute_ip(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = Fal
             if not output_rl.exists():
                 output_rl.mkdir(parents=True)
             output_file = output_rl / f'RL_IP_{year}_{month}.tif'
-            print(f'\tsaving result to {str(output_file)}\n')
+            #print(f'\tsaving result to {str(output_file)}\n')
             gu.save_image(rl_month, gt, proj, str(output_file))
 
     return ip_dict, RL_ip_dict
@@ -427,7 +427,7 @@ def compute_ip_xr(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = 
                 output_mean.mkdir(parents=True)
 
             output_file = output_mean / f'Mean_IP_{year}_{month}.tif'
-            print(f'\tsaving result to {str(output_file)}')
+            #print(f'\tsaving result to {str(output_file)}')
             gu.save_image(mean_ar, gt, proj, str(output_file))
 
             # now calculate RL
@@ -463,7 +463,7 @@ def compute_ip_xr(da, time_steps, gt, proj, outfolder, unit_scaler=1, deficit = 
             if not output_rl.exists():
                 output_rl.mkdir(parents=True)
             output_file = output_rl / f'RL_IP_{year}_{month}.tif'
-            print(f'\tsaving result to {str(output_file)}\n')
+            #print(f'\tsaving result to {str(output_file)}\n')
             gu.save_image(rl_month, gt, proj, str(output_file))
 
     return ip_ds, rl_ip_ds
@@ -489,9 +489,9 @@ def calc_pdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, gt, proj, outfolder, RL
     pdi_dict = {}
 
     for year in np.unique(years):
-        print(year)
+        print(f'Processing PDI for {year}')
         for month in np.unique(months):
-            print(f'\tMonth: {month}')
+            #print(f'\tMonth: {month}')
             date_id = pd.to_datetime(f'{year}-{month}', format='%Y-%m')
             P_ip = ip_dict[date_id]
             # normalize IP Precip and deficit run lengths
@@ -515,7 +515,7 @@ def calc_pdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, gt, proj, outfolder, RL
                 output_pdi.mkdir(parents=True)
             output_file = output_pdi / f'PDI_IP_{year}_{month}.tif'
 
-            print(f'\tsaving PDI result for {year}-{month} to {str(output_file)}\n')
+            #print(f'\tsaving PDI result for {year}-{month} to {str(output_file)}\n')
             gu.save_image(pdi, gt, proj, str(output_file))
 
 
@@ -575,7 +575,7 @@ def calc_pdi_xr(ip_ds, RL_ip_ds, ltm_ds, RL_ltm_ds, gt, proj, outfolder):
             output_pdi.mkdir(parents=True)
         output_file = output_pdi / f'PDI_IP_{year}_{month}.tif'
 
-        print(f'\tsaving PDI result for {year}-{month} to {str(output_file)}\n')
+        #print(f'\tsaving PDI result for {year}-{month} to {str(output_file)}\n')
         gu.save_image(pdi[0, :, :], gt, proj, str(output_file))
 
     return out_ds
@@ -600,9 +600,9 @@ def calc_tdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, Ta_max, gt, proj, outfo
     tdi_dict = {}
 
     for year in np.unique(years):
-        print(year)
+        print(f'Processing TDI for {year}')
         for month in np.unique(months):
-            print(f'\tMonth: {month}')
+            #print(f'\tMonth: {month}')
             date_id = pd.to_datetime(f'{year}-{month}', format='%Y-%m')
             T_ip = ip_dict[date_id]
             # normalize IP Precip and deficit run lengths
@@ -628,7 +628,7 @@ def calc_tdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, Ta_max, gt, proj, outfo
                 output_pdi.mkdir(parents=True)
             output_file = output_pdi / f'TDI_IP_{year}_{month}.tif'
 
-            print(f'\tsaving TDI result for {year}-{month} to {str(output_file)}\n')
+            #print(f'\tsaving TDI result for {year}-{month} to {str(output_file)}\n')
             gu.save_image(tdi, gt, proj, str(output_file))
 
     return tdi_dict
@@ -715,9 +715,10 @@ def calc_vdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, ndvi_min, gt, proj, out
     vdi_dict = {}
 
     for year in np.unique(years):
-        print(year)
+        print(f'Processing VDI for {year}')
+
         for month in np.unique(months):
-            print(f'\tMonth: {month}')
+            #print(f'\tMonth: {month}')
             date_id = pd.to_datetime(f'{year}-{month}', format='%Y-%m')
             ndvi_ip = ip_dict[date_id]
             # normalize IP Precip and deficit run lengths
@@ -741,7 +742,7 @@ def calc_vdi(ip_dict, RL_ip_dict, ltm_dict, RL_ltm_dict, ndvi_min, gt, proj, out
                 output_pdi.mkdir(parents=True)
             output_file = output_pdi / f'VDI_IP_{year}_{month}.tif'
 
-            print(f'\tsaving VDI result for {year}-{month} to {str(output_file)}\n')
+            #print(f'\tsaving VDI result for {year}-{month} to {str(output_file)}\n')
             gu.save_image(vdi, gt, proj, str(output_file))
 
     return vdi_dict
@@ -860,26 +861,31 @@ def compute_ndvi_monthly(da, start_date, end_date, gt, proj, outfolder):
                 # only use best quality data
                 ndvi[~vi_mask] = None
                 ndvi_list.append(ndvi)
+                del ndvi, band1, band2, qc, ds_day
+
 
             ndvi_mean = np.nanmean(ndvi_list, axis=0)
+            del ndvi_list
+            del ds_month
+
             times.append(date_dt)
             #out_ds[date_dt] = ndvi_mean
             out_ds[date_dt] = (['y', 'x'], ndvi_mean)
-
             # save to file
             output_ndvi = outfolder / 'monthly_rasters'
             if not output_ndvi.exists():
                 output_ndvi.mkdir(parents=True)
             output_file = output_ndvi / f'ndvi_monthly_mean_{year}_{month}.tif'
 
-            print(f'\tsaving ndvi monthly mean for {year}-{month} to {str(output_file)}\n')
+            #print(f'\tsaving ndvi monthly mean for {year}-{month} to {str(output_file)}\n')
             gu.save_image(ndvi_mean, gt, proj, str(output_file))
+
 
     # Assign coordinates
     out_ds.coords['time'] = np.array(times)
     out_ds.coords['y'] = np.arange(ndvi_mean.shape[1])
     out_ds.coords['x'] = np.arange(ndvi_mean.shape[0])
-
+    del ndvi_mean
 
     return out_ds
 
@@ -910,7 +916,7 @@ def resample_indices(outfolder, roi_shapefile, template_file, start_date, end_da
     vdi_ds = xr.Dataset()
 
     for di in indices:
-        print(f'resampling {di} images')
+        print(f'resampling {di} images and clipping to ROI...')
         #out_ds[di] = {}
         index_folder = outfolder / di
         img_list = list(index_folder.glob('*.tif'))
@@ -933,7 +939,7 @@ def resample_indices(outfolder, roi_shapefile, template_file, start_date, end_da
             if date_dt < pd.to_datetime(start_date) or date_dt >  pd.to_datetime(end_date):
                 continue
 
-            print(date_dt)
+            #print(date_dt)
             if di == 'PDI':
                 times_pdi.append(date_dt)
             elif di == 'TDI':
@@ -974,7 +980,7 @@ def resample_indices(outfolder, roi_shapefile, template_file, start_date, end_da
                 "transform": clipped_transform,
                 "count": 1
             })
-            print(f'Saving as {str(outfile)}')
+            #print(f'Saving as {str(outfile)}')
 
             # Write the clipped raster to a new GeoTIFF file
             with rasterio.open(str(outfile), "w", **clipped_meta) as dest:
@@ -1012,7 +1018,7 @@ def calc_cdi_img(start_date, end_date, gt, proj, outfolder):
     time_steps = pd.date_range(start=start_date, end=end_date, freq='MS')
 
     for time_step in time_steps:
-        print(time_step)
+        print(f'processing CDI for {time_step}')
         month = time_step.month
         year = time_step.year
 
@@ -1049,7 +1055,7 @@ def calc_cdi_img(start_date, end_date, gt, proj, outfolder):
             output_dir.mkdir(parents=True)
         output_file = output_dir / f'CDI_IP_{year}_{month}.tif'
 
-        print(f'\tsaving final CDI image for {year}-{month} to {str(output_file)}\n')
+        #print(f'\tsaving final CDI image for {year}-{month} to {str(output_file)}\n')
         gu.save_image(cdi, gt, proj, str(output_file))
 
     return outdict
