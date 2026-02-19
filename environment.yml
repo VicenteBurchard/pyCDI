@@ -1,21 +1,17 @@
 name: pycdi
 channels:
     - conda-forge
+
 dependencies:
     - python=3.9
     - jupyterlab
     - ipywidgets
-    - nodejs=18
-    - mystmd
-    - jupyterlab-myst
-    - libwebp
-    - gdal
     - numpy<2.0
+    - gdal
     - scipy
     - pandas
     - matplotlib
     - plotly
-    - bokeh
     - netCDF4
     - scikit-learn
     - geopandas
@@ -25,6 +21,8 @@ dependencies:
     - localtileserver
     - pip
     - cartopy
+    - requests
+    - aiohttp
     - pip:
       - cubo 
       
